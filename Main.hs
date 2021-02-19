@@ -14,7 +14,7 @@ import qualified Discord.Requests as R
 -- | Replies "pong" to every message that starts with "ping"
 pingpongExample :: IO ()
 pingpongExample = do userFacingError <- runDiscord $ def
-                                            { discordToken = "ODExOTE1MjYyNDA0MTk4NDUw.YC5JAw.9padpF37OsoFpcimtC7mYNbeO-c"
+                                            { discordToken = "#######"
                                             , discordOnEvent = eventHandler }
                      TIO.putStrLn userFacingError
 
