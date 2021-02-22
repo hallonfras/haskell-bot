@@ -33,6 +33,17 @@
   (major1) == 1 && (major2) == 8 && (minor) <= 3)
 #endif /* MIN_VERSION_discord_haskell */
 
+/* package dotenv-0.8.0.7 */
+#ifndef VERSION_dotenv
+#define VERSION_dotenv "0.8.0.7"
+#endif /* VERSION_dotenv */
+#ifndef MIN_VERSION_dotenv
+#define MIN_VERSION_dotenv(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  8 || \
+  (major1) == 0 && (major2) == 8 && (minor) <= 0)
+#endif /* MIN_VERSION_dotenv */
+
 /* package text-1.2.3.2 */
 #ifndef VERSION_text
 #define VERSION_text "1.2.3.2"
