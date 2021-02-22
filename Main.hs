@@ -38,7 +38,7 @@ findCommand list string
 startBot :: IO ()
 startBot = do 
         userFacingError <- runDiscord $ def 
-                { discordToken = "ODExOTE1MjYyNDA0MTk4NDUw.YC5JAw.Zj-bjsUJ-XdxBhWTwxOFPqfqwkU", 
+                { discordToken = "#####", 
                 discordOnEvent = eventHandler }
         TIO.putStrLn userFacingError
 
