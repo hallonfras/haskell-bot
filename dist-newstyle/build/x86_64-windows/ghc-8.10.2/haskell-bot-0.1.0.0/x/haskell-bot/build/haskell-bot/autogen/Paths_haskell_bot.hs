@@ -29,12 +29,12 @@ version :: Version
 version = Version [0,1,0,0] []
 bindir, libdir, dynlibdir, datadir, libexecdir, sysconfdir :: FilePath
 
-bindir     = "C:\\Users\\isaac\\AppData\\Roaming\\cabal\\bin"
-libdir     = "C:\\Users\\isaac\\AppData\\Roaming\\cabal\\x86_64-windows-ghc-8.10.2\\haskell-bot-0.1.0.0-inplace-haskell-bot"
-dynlibdir  = "C:\\Users\\isaac\\AppData\\Roaming\\cabal\\x86_64-windows-ghc-8.10.2"
-datadir    = "C:\\Users\\isaac\\AppData\\Roaming\\cabal\\x86_64-windows-ghc-8.10.2\\haskell-bot-0.1.0.0"
-libexecdir = "C:\\Users\\isaac\\AppData\\Roaming\\cabal\\haskell-bot-0.1.0.0-inplace-haskell-bot\\x86_64-windows-ghc-8.10.2\\haskell-bot-0.1.0.0"
-sysconfdir = "C:\\Users\\isaac\\AppData\\Roaming\\cabal\\etc"
+bindir     = "C:\\Users\\Alexf\\AppData\\Roaming\\cabal\\bin"
+libdir     = "C:\\Users\\Alexf\\AppData\\Roaming\\cabal\\x86_64-windows-ghc-8.10.2\\haskell-bot-0.1.0.0-inplace-haskell-bot"
+dynlibdir  = "C:\\Users\\Alexf\\AppData\\Roaming\\cabal\\x86_64-windows-ghc-8.10.2"
+datadir    = "C:\\Users\\Alexf\\AppData\\Roaming\\cabal\\x86_64-windows-ghc-8.10.2\\haskell-bot-0.1.0.0"
+libexecdir = "C:\\Users\\Alexf\\AppData\\Roaming\\cabal\\haskell-bot-0.1.0.0-inplace-haskell-bot\\x86_64-windows-ghc-8.10.2\\haskell-bot-0.1.0.0"
+sysconfdir = "C:\\Users\\Alexf\\AppData\\Roaming\\cabal\\etc"
 
 getBinDir, getLibDir, getDynLibDir, getDataDir, getLibexecDir, getSysconfDir :: IO FilePath
 getBinDir = catchIO (getEnv "haskell_bot_bindir") (\_ -> return bindir)
