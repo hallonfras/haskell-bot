@@ -1,8 +1,11 @@
 {-# LANGUAGE OverloadedStrings #-}  -- allows "string literals" to be Text
 
-import Control.Monad (when)
+import Control.Monad (when, void)
+import System.Environment
+
+import Configuration.Dotenv (loadFile, defaultConfig)
 import Control.Concurrent ( threadDelay )
-import Data.Text (isPrefixOf, toLower, Text, unpack)
+import Data.Text (isPrefixOf, toLower, Text, unpack, pack)
 import qualified Data.Text.IO as TIO
 
 import UnliftIO
@@ -11,7 +14,9 @@ import Discord
 import Discord.Types
 import qualified Discord.Requests as R
 
-
+main = do
+        loadFile defaultConfig
+        startBot
 
 commands :: [(String, Message -> DiscordHandler ())]
 commands = [("zhanwei", zhanwei)]
@@ -33,12 +38,11 @@ findCommand list string
         | otherwise = findCommand (tail list) string 
 
 
-
--- | Replies "pong" to every message that starts with "ping"
 startBot :: IO ()
 startBot = do 
+        token <- getEnv "DISCORD_TOKEN"
         userFacingError <- runDiscord $ def 
-                { discordToken = "#####", 
+                { discordToken = pack token, 
                 discordOnEvent = eventHandler }
         TIO.putStrLn userFacingError
 
