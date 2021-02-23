@@ -18,13 +18,15 @@ build-type:          Simple
 extra-source-files:  CHANGELOG.md, README.md
 
 executable haskell-bot
-  main-is:             canvas.hs
-  -- other-modules:
+  main-is:             Main.hs
+  other-modules: Canvas
   -- other-extensions:
   build-depends:       base
                      , text
                      , discord-haskell
                      , unliftio
                      , http-conduit
+                     , aeson
+                     , bytestring
   -- hs-source-dirs:
   default-language:    Haskell2010
