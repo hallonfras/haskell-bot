@@ -29,11 +29,6 @@ instance FromJSON Joke where
                 return (Joke {joke = joke})
         parseJSON _ = mempty
 
-main = do
-        loadFile defaultConfig
-        startBot
-
-
 commands :: [(String, Message -> DiscordHandler ())]
 commands = [("joke", dadjoke)]
 
@@ -58,36 +53,4 @@ jokerequest = do
         httpBS request  
 
 packJoke (MessageData (Just (Joke {joke = j})) _ ) = pack j
-
-notFound :: Message -> DiscordHandler ()
-notFound m = do
-        restCall (R.CreateMessage (messageChannel m) "That command doesnt exist!")
-        pure ()
-
-findCommand :: [(String, (Message -> DiscordHandler ()) )] -> String -> (Message -> DiscordHandler ())
-findCommand list string
-        | null list = notFound
-        | fst (head list) == string = snd (head list)
-        | otherwise = findCommand (tail list) string 
-
-
-startBot :: IO ()
-startBot = do 
-        token <- getEnv "DISCORD_TOKEN"
-        userFacingError <- runDiscord $ def 
-                { discordToken = pack token, 
-                discordOnEvent = eventHandler }
-        TIO.putStrLn userFacingError
-
-eventHandler :: Event -> DiscordHandler ()
-eventHandler event = case event of
-    MessageCreate m -> when (not (fromBot m) && isCommand (messageText m)) $ do
-        findCommand commands (tail (unpack (messageText m))) $ m
-    _ -> pure ()
-
-fromBot :: Message -> Bool
-fromBot m = userIsBot (messageAuthor m)
-
-isCommand :: Text -> Bool
-isCommand text = "!" `isPrefixOf` (toLower text)
 
