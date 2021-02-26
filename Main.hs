@@ -52,26 +52,20 @@ findCommand list string
 
 startBot :: IO ()
 startBot = do 
-  --      token <- getEnv "DISCORD_TOKEN"
-        void $ runDiscord $ def 
-                { discordToken = pack "discord token", 
-                discordOnEvent = botEventHandler }
+        token <- getEnv "DISCORD_TOKEN"
+        userFacingError <- runDiscord $ def 
+                { discordToken = pack token, 
+                discordOnEvent = eventHandler }
+        TIO.putStrLn userFacingError
 
-messages :: DiscordHandle -> Message -> IO()
-messages dis receivedMessage =
-
-        pure ()
-
-
-botEventHandler :: DiscordHandle -> Event -> IO ()
-botEventHandler dis event =
-    case event of
-        MessageCreate m -> messages dis m
-        _               -> pure ()
+eventHandler :: Event -> DiscordHandler ()
+eventHandler event = case event of
+    MessageCreate m -> when (not (fromBot m) && isCommand (messageText m)) $ do
+        findCommand commands (tail (unpack (messageText m))) $ m
+    _ -> pure ()
 
 fromBot :: Message -> Bool
 fromBot m = userIsBot (messageAuthor m)
 
 isCommand :: Text -> Bool
 isCommand text = "!" `isPrefixOf` (toLower text)
-
