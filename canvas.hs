@@ -75,11 +75,11 @@ sample = Course "0" "name" "code"
 fromMaybe :: Maybe a -> a
 fromMaybe (Just a) = a 
 
---token: 14589~8OSCjplkTnDQZmlPnsyof6KoBPEjgkdwGWlcIp5iCLVVev85NMsdjuWk3lxse2OU
+--token: 
 test :: IO ()
 test = 
     do
-    --courses <- getCourses "14589~8OSCjplkTnDQZmlPnsyof6KoBPEjgkdwGWlcIp5iCLVVev85NMsdjuWk3lxse2OU"
+    --courses <- getCourses ""
     --print courses
     --str <- buildString (head (fromMaybe courses))
     --print str
