@@ -10,8 +10,6 @@ import Control.Concurrent ( threadDelay )
 import Data.Text (isPrefixOf, toLower, Text, unpack, pack)
 import qualified Data.Text.IO as TIO
 
-import Canvas hiding (test)
-
 import UnliftIO
 
 import Discord
@@ -25,13 +23,8 @@ main = do
         startBot
 
 commands :: [(String, Message -> DiscordHandler ())]
-commands = [("zhanwei", zhanwei),("test",test)]
+commands = [("test",test)]
 
-
-zhanwei :: Message -> DiscordHandler ()
-zhanwei m = do
-        restCall (R.CreateMessage (messageChannel m) "Yes this looks good")
-        pure ()
 
 test :: Message -> DiscordHandler ()
 test m = do
