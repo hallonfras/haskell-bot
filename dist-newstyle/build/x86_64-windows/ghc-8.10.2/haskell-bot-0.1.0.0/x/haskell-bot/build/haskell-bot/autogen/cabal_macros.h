@@ -11,15 +11,15 @@
   (major1) == 0 && (major2) == 1 && (minor) <= 0)
 #endif /* MIN_VERSION_haskell_bot */
 
-/* package aeson-1.5.5.1 */
+/* package aeson-1.5.6.0 */
 #ifndef VERSION_aeson
-#define VERSION_aeson "1.5.5.1"
+#define VERSION_aeson "1.5.6.0"
 #endif /* VERSION_aeson */
 #ifndef MIN_VERSION_aeson
 #define MIN_VERSION_aeson(major1,major2,minor) (\
   (major1) <  1 || \
   (major1) == 1 && (major2) <  5 || \
-  (major1) == 1 && (major2) == 5 && (minor) <= 5)
+  (major1) == 1 && (major2) == 5 && (minor) <= 6)
 #endif /* MIN_VERSION_aeson */
 
 /* package base-4.14.1.0 */
@@ -55,16 +55,49 @@
   (major1) == 1 && (major2) == 8 && (minor) <= 3)
 #endif /* MIN_VERSION_discord_haskell */
 
-/* package http-conduit-2.3.7.4 */
+/* package dotenv-0.8.0.7 */
+#ifndef VERSION_dotenv
+#define VERSION_dotenv "0.8.0.7"
+#endif /* VERSION_dotenv */
+#ifndef MIN_VERSION_dotenv
+#define MIN_VERSION_dotenv(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  8 || \
+  (major1) == 0 && (major2) == 8 && (minor) <= 0)
+#endif /* MIN_VERSION_dotenv */
+
+/* package hint-0.9.0.3 */
+#ifndef VERSION_hint
+#define VERSION_hint "0.9.0.3"
+#endif /* VERSION_hint */
+#ifndef MIN_VERSION_hint
+#define MIN_VERSION_hint(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  9 || \
+  (major1) == 0 && (major2) == 9 && (minor) <= 0)
+#endif /* MIN_VERSION_hint */
+
+/* package http-conduit-2.3.8 */
 #ifndef VERSION_http_conduit
-#define VERSION_http_conduit "2.3.7.4"
+#define VERSION_http_conduit "2.3.8"
 #endif /* VERSION_http_conduit */
 #ifndef MIN_VERSION_http_conduit
 #define MIN_VERSION_http_conduit(major1,major2,minor) (\
   (major1) <  2 || \
   (major1) == 2 && (major2) <  3 || \
-  (major1) == 2 && (major2) == 3 && (minor) <= 7)
+  (major1) == 2 && (major2) == 3 && (minor) <= 8)
 #endif /* MIN_VERSION_http_conduit */
+
+/* package stringbuilder-0.5.1 */
+#ifndef VERSION_stringbuilder
+#define VERSION_stringbuilder "0.5.1"
+#endif /* VERSION_stringbuilder */
+#ifndef MIN_VERSION_stringbuilder
+#define MIN_VERSION_stringbuilder(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  5 || \
+  (major1) == 0 && (major2) == 5 && (minor) <= 1)
+#endif /* MIN_VERSION_stringbuilder */
 
 /* package text-1.2.3.2 */
 #ifndef VERSION_text
