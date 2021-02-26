@@ -19,11 +19,11 @@ main = do
         startBot
 
 commands :: [(String, Message -> DiscordHandler ())]
-commands = [("zhanwei", zhanwei)]
+commands = [("test", test)]
 
-zhanwei :: Message -> DiscordHandler ()
-zhanwei m = do
-        restCall (R.CreateMessage (messageChannel m) "Yes this looks good")
+test :: Message -> DiscordHandler ()
+test m = do
+        restCall (R.CreateMessage (messageChannel m) "the test function works at least")
         pure ()
 
 notFound :: Message -> DiscordHandler ()
