@@ -61,7 +61,7 @@ startBot :: IO ()
 startBot = do 
   --      token <- getEnv "DISCORD_TOKEN"
         void $ runDiscord $ def 
-                { discordToken = pack "ODExOTE1MjYyNDA0MTk4NDUw.YC5JAw.T8TRf-NwhmZTkWmxVEuA7S4DUFk", 
+                { discordToken = pack "discord token", 
                 discordOnEvent = botEventHandler }
 
 messages :: DiscordHandle -> Message -> IO()
