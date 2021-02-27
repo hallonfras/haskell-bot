@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}  -- allows "string literals" to be Text
-module Weather where
+module Weather where 
+
 import Control.Monad
 
 import           Data.Aeson
@@ -8,14 +9,17 @@ import qualified Data.ByteString       as BS
 import qualified Data.ByteString.Char8 as S8
 import qualified Data.ByteString.Lazy  as BSL
 import           Network.HTTP.Simple
-
+import System.Environment
 import Discord
 import Discord.Types
 import qualified Discord.Requests as R
 
+
+
 data Weather = Weather { 
     description :: String
   , temperature :: Float
+  , icon        :: String
 } deriving (Show)
 
 
@@ -24,14 +28,15 @@ instance FromJSON Weather where
         weatherObj <- obj .: "weather"
         let actualWeatherObj = Prelude.head weatherObj
         desc <- actualWeatherObj .: "description"
+        ic <- actualWeatherObj .: "icon"
         dataObj <- obj .: "main"
         temp <- dataObj .: "temp"
-        return (Weather { description = desc, temperature = temp })
+        return (Weather { description = desc, temperature = temp, icon = ic })
     parseJSON _ = mempty
 
 --api request to json response
 --lägg till felhantering
-apiRequest :: String -> IO S8.ByteString
+apiRequest :: String -> DiscordHandler S8.ByteString
 apiRequest source = do
     request <- parseRequest source
     let request' = setRequestMethod (S8.pack "GET") $ request
@@ -39,27 +44,31 @@ apiRequest source = do
     return (getResponseBody response)
     
 
-getWeather :: IO (Maybe Weather)
+getWeather :: DiscordHandler (Maybe Weather)
 getWeather  = do
-    json <- apiRequest "https://api.openweathermap.org/data/2.5/weather?q=Uppsala&appid=ce3a449055d96d97c82166fff5434393"
+    let api = "https://api.openweathermap.org/data/2.5/weather?q=Uppsala&appid=ce3a449055d96d97c82166fff5434393"
+    json <- apiRequest api
     let 
         weather = Data.Aeson.decode $ BSL.fromStrict json :: Maybe Weather
     return weather
 
-weatherToString :: (Maybe Weather) -> String
-weatherToString (Just (Weather desc temp)) = "The weather is" ++ desc
+weatherToString :: Maybe Weather -> String
+weatherToString (Just (Weather desc temp _)) = "The weather in Uppsala is " ++ desc ++ " with a temperature of " ++ show (temp - 273.15)
 weatherToString Nothing = ""
 
-handleMessage :: Message -> DiscordHandler ()
-handleMessage m =  do
-    weather <- getWeather
-    let weatherString = weatherToString weather
-    restCall (R.CreateMessage (messageChannel m) (pack (weatherToString weather)) )
-    pure ()
+weatherIcon :: Maybe Weather -> String
+weatherIcon (Just (Weather _ _ icon)) = "http://openweathermap.org/img/wn/" ++ icon ++ "@2x.png"
+weatherIcon Nothing = ""
 
---token: 14589~8OSCjplkTnDQZmlPnsyof6KoBPEjgkdwGWlcIp5iCLVVev85NMsdjuWk3lxse2OU
-main :: IO ()
-main = 
-    do
+handleMessage :: Message -> DiscordHandler ()
+handleMessage m = do
     weather <- getWeather
-    pure ()
+    let icon = pack (weatherIcon weather)
+    let string = pack (weatherToString weather)
+    _ <- restCall (R.CreateMessageEmbed (messageChannel m) "" $
+            def { createEmbedTitle = "CoolNiceWeather",
+             createEmbedDescription = string, 
+             createEmbedThumbnail = Just $ CreateEmbedImageUrl icon
+            })
+    return()
+

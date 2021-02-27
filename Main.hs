@@ -14,12 +14,15 @@ import Discord
 import Discord.Types
 import qualified Discord.Requests as R
 
+import qualified Weather
+
+main :: IO ()
 main = do
         loadFile defaultConfig
         startBot
 
 commands :: [(String, Message -> DiscordHandler ())]
-commands = [("test", test)]
+commands = [ ("test", test), ("weather", Weather.handleMessage) ]
 
 test :: Message -> DiscordHandler ()
 test m = do
