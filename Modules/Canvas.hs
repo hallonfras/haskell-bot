@@ -17,12 +17,15 @@ import           Network.HTTP.Simple
 import qualified Language.Haskell.Interpreter as Hint
 import Discord
 import Discord.Types
-
-class Stringable a where
-    stringIt :: a -> String
+import Utils
+import Data.List.Split as Split
+import Data.Text (isPrefixOf, toLower, Text, unpack, pack, isInfixOf, splitAt, splitOn)
 
 instance Stringable Course where
-    stringIt c = undefined
+    stringIt c = (course_name c) ++ "\nID: " ++ (course_id c) ++ "\nCODE: " ++ (course_code c)
+
+instance Stringable Assignment where
+    stringIt a = (assignment_name a) ++ "\nID: " ++ (assignment_id a) ++ "\nPOINTS: " ++ (points_possible a) ++ "\nURL: " ++ (assignment_url a) ++ "\nCREATION DATE: " ++ (created_at a)
 
 data Folder = Folder {
     folder_id :: String,
@@ -51,12 +54,6 @@ data Assignment = Assignment {
     created_at :: String
 } deriving (Data,Typeable,Show)
 
-data MessageData a = Msg {
-    value :: a,
-    error :: Bool,
-    errorMsg :: String
-}
-
 instance Eq Folder where
     (==) f1 f2 = folder_id f1 == folder_id f2 && 
                                 folder_name f1 == folder_name f2 && 
@@ -76,10 +73,6 @@ instance FromJSON Folder where
         return $ Folder (show (id ::Int)) name (maybeToString (parent :: Maybe Int)) [] [] --new folder does not have children nor files
     parseJSON _ = mempty
 
-maybeToString :: Show a => Maybe a -> Maybe String
-maybeToString (Just i) = Just (show i)
-maybeToString Nothing = Nothing
-
 instance FromJSON Course where
     parseJSON (Object v) = do
         id <- v .: "id" 
@@ -97,24 +90,6 @@ instance FromJSON Assignment where
         created_at <- v .: "created_at"
         return $ Assignment (show (id :: Int)) name (show (points :: Double)) url created_at
     parseJSON _ = mempty
-
---builds a string from a data record
-dataToString :: (Data a,Show a) => a -> DiscordHandler String
-dataToString obj = do
-    let fields = constrFields (toConstr obj) -- gets list of datatype fields
-    buildString' fields obj "" -- calls builder loop
---loop that builds the full string that shall be returned by the discord bot
-buildString' :: Show t => [String] -> t -> String -> DiscordHandler String
-buildString' fields obj str = do
-    if null fields
-    then do return str
-    else do
-        value' <- Hint.runInterpreter $ Hint.loadModules ["DataT.hs"] >> Hint.setTopLevelModules ["DataT"]>>Hint.setImports["Prelude"] >> 
-                                Hint.interpret ("DataT." ++ head fields ++ " " ++ (show obj)) (Hint.as :: String) -- runs function
-        let value = (\(Right v) -> v) value' -- Fetches the result from Either datatype
-            s = str ++ "\n" ++ (head fields ++ " : " ++ value)
-        buildString' (tail fields) obj s
-
 
 --api request to json response
 --lägg till felhantering
@@ -167,31 +142,19 @@ sortFolders folderList = findRoot folderList folderList
                     | fromMaybe (parent_id x) == r_id = buildFolder xs (Folder r_id r_name r_pid ((buildFolder (delete f folders) x):children) files) --if f has parent_id equal to root iq then add (f with its children) to children 
                     | otherwise = buildFolder xs root
 
+canvAssignments :: Message -> DiscordHandler ()
+canvAssignments m = do
+        let
+                args = tail $ Split.splitOn "-" (removeSpace $ unpack $ messageText m)
+                courseid = args !! 0 -- courseid is the first and only argument ex. (!assignments -3085)
+                title = pack "Assignments"
+                icon = pack "https://static.thenounproject.com/png/51139-200.png"
+        msgdata <- getAssignments "14589~soDe3Fvwq2zzG4ab8zqPOS7CcJIKsPSybnHE0sPjF7vFTEdGn2eoKaHN9VTUrYqy" courseid
+        handleMessage m msgdata title icon
 
-
-jsonToMessageData :: FromJSON a => S8.ByteString -> DiscordHandler (MessageData [a])
-jsonToMessageData json = do
-    let 
-        value = Data.Aeson.decode $ BSL.fromStrict json
-    if apiFail value
-    then do return (Msg [] True "Failed to retrieve data")
-    else do return (Msg (fromMaybe value) False "")
-
-
---builds a string of a data record list
-dataListToString :: (Data a, Show a) => [a] -> DiscordHandler String
-dataListToString objs = dataListToString' objs ""
-
---accumulator function to build string of the object list
-dataListToString' :: (Data a, Show a) => [a] -> String -> DiscordHandler String
-dataListToString' [] str = return str
-dataListToString' (o:os) str = do
-    ostr <- dataToString o
-    dataListToString' os (str ++ ostr ++ "\n")
-
-apiFail :: Maybe a -> Bool 
-apiFail Nothing = True
-apiFail _ = False
-
-fromMaybe :: Maybe a -> a
-fromMaybe (Just a) = a
+canvCourses :: Message -> DiscordHandler ()
+canvCourses m = do
+        let title = pack "Courses"
+            icon = pack "https://cdn2.iconfinder.com/data/icons/online-university/96/computer_training_art_course-512.png"
+        msgdata <- getCourses "14589~soDe3Fvwq2zzG4ab8zqPOS7CcJIKsPSybnHE0sPjF7vFTEdGn2eoKaHN9VTUrYqy"
+        handleMessage m msgdata title icon

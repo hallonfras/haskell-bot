@@ -5,10 +5,13 @@ import Data.Aeson
 
 import Discord
 import Discord.Types
+import qualified Discord.Requests as R
+import qualified Data.Text.IO as TIO
 import Network.HTTP.Simple
 
 import qualified Data.ByteString.Char8 as S8
 import qualified Data.ByteString.Lazy  as BSL
+import Data.Text (isPrefixOf, toLower, Text, unpack, pack, isInfixOf, splitAt, splitOn)
 
 data Joke = Joke {joke :: String} deriving (Show)
 
@@ -35,3 +38,9 @@ jokerequest = do
 
 fromMaybeJoke :: Maybe Joke -> String 
 fromMaybeJoke (Just (Joke j)) = j
+
+dadjoke :: Message -> DiscordHandler ()
+dadjoke m = do
+        joke' <- getJoke
+        restCall (R.CreateMessage (messageChannel m) (pack (fromMaybeJoke joke')))
+        pure ()
