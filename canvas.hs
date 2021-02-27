@@ -18,7 +18,11 @@ import qualified Language.Haskell.Interpreter as Hint
 import Discord
 import Discord.Types
 
+class Stringable a where
+    stringIt :: a -> String
 
+instance Stringable Course where
+    stringIt c = undefined
 
 data Folder = Folder {
     folder_id :: String,
