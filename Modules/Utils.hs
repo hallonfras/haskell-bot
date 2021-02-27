@@ -55,8 +55,11 @@ removeSpace xs = foldl (\clean char -> if char == ' ' then clean else clean ++ [
 handleMessage :: (Show a,Stringable a) => Message -> MessageData (Maybe a) -> Text -> Text -> DiscordHandler ()
 handleMessage m msgdata title icon = do
         if Utils.error msgdata /= Void
-        then do 
-                sendEmbed m (pack $ getError $ Utils.error msgdata) title icon
+        then do
+                let 
+                    error_title = pack "Error 404"
+                    error_icon = pack "https://cdn0.iconfinder.com/data/icons/shift-free/32/Error-512.png"
+                sendEmbed m (pack $ getError $ Utils.error msgdata) error_title error_icon 
         else do 
                 let txt = pack $ stringIt $ fromMaybe (value msgdata)
                 sendEmbed m txt title icon
