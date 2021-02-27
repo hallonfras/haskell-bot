@@ -50,9 +50,9 @@ findCommand list string
 
 startBot :: IO ()
 startBot = do 
-        -- token <- getEnv "DISCORD_TOKEN"
+        token <- getEnv "DISCORD_TOKEN"
         userFacingError <- runDiscord $ def 
-                { discordToken = pack "ODExOTE1MjYyNDA0MTk4NDUw.YC5JAw.TDldbsI9kSidAGkRiix3EBFKOt4", 
+                { discordToken = pack token, 
                 discordOnEvent = eventHandler }
         TIO.putStrLn userFacingError
 
