@@ -19,8 +19,9 @@ extra-source-files:  CHANGELOG.md, README.md
 
 executable haskell-bot
   main-is:             Main.hs
-  other-modules: Canvas,Joke
-  other-modules:       Weather
+  other-modules: Canvas
+                ,Joke
+                ,Weather
   -- other-extensions:
   build-depends:       base
                      , text
