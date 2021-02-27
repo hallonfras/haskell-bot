@@ -19,16 +19,20 @@ extra-source-files:  CHANGELOG.md, README.md
 
 executable haskell-bot
   main-is:             Main.hs
+  other-modules: Canvas,Joke
   other-modules:       Weather
   -- other-extensions:
   build-depends:       base
                      , text
                      , discord-haskell
                      , unliftio
-                     , dotenv
                      , http-conduit
                      , aeson
                      , bytestring
+                     , stringbuilder
+                     , dotenv
+                     ,hint
+                     ,split
   hs-source-dirs: ./
                 , Modules/
   default-language:    Haskell2010
