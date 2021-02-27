@@ -149,20 +149,12 @@ canvAssignments m = do
                 courseid = args !! 0 -- courseid is the first and only argument ex. (!assignments -3085)
                 title = pack "Assignments"
                 icon = pack "https://static.thenounproject.com/png/51139-200.png"
-<<<<<<< HEAD
-        msgdata <- getAssignments "canvas token" courseid
-=======
         msgdata <- getAssignments "14589~soDe3Fvwq2zzG4ab8zqPOS7CcJIKsPSybnHE0sPjF7vFTEdGn2eoKaHN9VTUrYqy" courseid
->>>>>>> feature-canvas
         handleMessage m msgdata title icon
 
 canvCourses :: Message -> DiscordHandler ()
 canvCourses m = do
         let title = pack "Courses"
             icon = pack "https://cdn2.iconfinder.com/data/icons/online-university/96/computer_training_art_course-512.png"
-<<<<<<< HEAD
-        msgdata <- getCourses "canvas token"
-=======
         msgdata <- getCourses "14589~soDe3Fvwq2zzG4ab8zqPOS7CcJIKsPSybnHE0sPjF7vFTEdGn2eoKaHN9VTUrYqy"
->>>>>>> feature-canvas
         handleMessage m msgdata title icon
