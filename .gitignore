@@ -1,9 +1,4 @@
 .env
-<<<<<<< HEAD
-dist-newstyle
-dist
-=======
 dist-newstyle/
 dist/
 Scraps.hs
->>>>>>> feature-canvas
