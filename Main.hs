@@ -17,13 +17,13 @@ import qualified Discord.Requests as R
 import Data.List.Split as Split
 import Data.Data ( Data )
 
-type Command = String 
-type Argument = String
-
-
 import qualified Weather
 import qualified Canvas
 import qualified Joke
+
+
+type Command = String 
+type Argument = String
 
 {- main
     loads the .env file using the Dotenv library. Then calls startbot
