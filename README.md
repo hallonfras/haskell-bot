@@ -1,2 +1,2 @@
 # haskell-bot
-A discord bot written in haskell!
+A cool nice discord bot written in haskell!

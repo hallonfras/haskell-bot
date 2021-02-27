@@ -20,6 +20,7 @@ extra-source-files:  CHANGELOG.md, README.md
 executable haskell-bot
   main-is:             Main.hs
   other-modules: Canvas,Joke
+  other-modules:       Weather
   -- other-extensions:
   build-depends:       base
                      , text
@@ -32,5 +33,6 @@ executable haskell-bot
                      , dotenv
                      ,hint
                      ,split
-  -- hs-source-dirs:
+  hs-source-dirs: ./
+                , Modules/
   default-language:    Haskell2010

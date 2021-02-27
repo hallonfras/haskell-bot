@@ -21,12 +21,15 @@ import Data.Data ( Data )
 
 type Command = String 
 type Argument = String
+import qualified Weather
+
+main :: IO ()
 main = do
         loadFile defaultConfig
         startBot
 
 commands :: [(Command, Message -> DiscordHandler ())]
-commands = [("joke",dadjoke),("courses",canvCourses),("assignments",canvAssignments)]
+commands = [("joke",dadjoke),("courses",canvCourses),("assignments",canvAssignments),("weather", Weather.handleMessage)]
 
 canvAssignments :: Message -> DiscordHandler ()
 canvAssignments m = do
