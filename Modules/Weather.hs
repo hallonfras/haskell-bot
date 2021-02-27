@@ -43,7 +43,7 @@ apiRequest source = do
     response <- httpBS request'
     return (getResponseBody response)
     
-
+    
 getWeather :: DiscordHandler (Maybe Weather)
 getWeather  = do
     let api = "https://api.openweathermap.org/data/2.5/weather?q=Uppsala&appid=ce3a449055d96d97c82166fff5434393"
