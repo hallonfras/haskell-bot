@@ -103,16 +103,18 @@ apiRequest source token = do
     response <- httpBS request'
     return (getResponseBody response)
 
-getCourses :: String -> DiscordHandler (MessageData [Course])
+getCourses :: String -> DiscordHandler (MessageData (Maybe [Course]))
 getCourses token = do
     json <- apiRequest "https://uppsala.instructure.com/api/v1/users/self/courses" token
-    jsonToMessageData json
+    let courses = Data.Aeson.decode $ BSL.fromStrict json
+    toMessageData courses
 
 -- https://uppsala.instructure.com/api/v1/courses/26396
-getAssignments :: String -> String -> DiscordHandler (MessageData [Assignment])
+getAssignments :: String -> String -> DiscordHandler (MessageData (Maybe [Assignment]))
 getAssignments token courseid = do
     json <- apiRequest ("https://uppsala.instructure.com/api/v1/courses/" ++ courseid ++ "/assignments") token
-    jsonToMessageData json
+    let assignments = Data.Aeson.decode $ BSL.fromStrict json
+    toMessageData assignments
 
 apiRequest' :: String -> [Char] -> IO (S8.ByteString)
 apiRequest' source token = do
@@ -149,12 +151,12 @@ canvAssignments m = do
                 courseid = args !! 0 -- courseid is the first and only argument ex. (!assignments -3085)
                 title = pack "Assignments"
                 icon = pack "https://static.thenounproject.com/png/51139-200.png"
-        msgdata <- getAssignments "canvas token" courseid
+        msgdata <- getAssignments "14589~soDe3Fvwq2zzG4ab8zqPOS7CcJIKsPSybnHE0sPjF7vFTEdGn2eoKaHN9VTUrYqy" courseid
         handleMessage m msgdata title icon
 
 canvCourses :: Message -> DiscordHandler ()
 canvCourses m = do
         let title = pack "Courses"
             icon = pack "https://cdn2.iconfinder.com/data/icons/online-university/96/computer_training_art_course-512.png"
-        msgdata <- getCourses "canvas token"
+        msgdata <- getCourses "14589~soDe3Fvwq2zzG4ab8zqPOS7CcJIKsPSybnHE0sPjF7vFTEdGn2eoKaHN9VTUrYqy"
         handleMessage m msgdata title icon

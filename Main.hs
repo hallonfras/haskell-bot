@@ -9,9 +9,7 @@ import Configuration.Dotenv (loadFile, defaultConfig)
 import Control.Concurrent ( threadDelay )
 import Data.Text (isPrefixOf, toLower, Text, unpack, pack, isInfixOf, splitAt, splitOn)
 import qualified Data.Text.IO as TIO
-import Canvas
-import Utils
-import Joke
+
 import UnliftIO
 
 import Discord
@@ -19,7 +17,14 @@ import Discord.Types
 import qualified Discord.Requests as R
 import Data.List.Split as Split
 import Data.Data ( Data )
+
+
 import qualified Weather
+import Poetry
+import Canvas
+import Utils
+import Joke
+
 
 type Command = String 
 
@@ -30,7 +35,7 @@ main = do
         startBot
 
 commands :: [(Command, Message -> DiscordHandler ())]
-commands = [("joke",dadjoke),("courses",canvCourses),("assignments",canvAssignments),("weather", Weather.handleMessage)]
+commands = [("joke",dadjoke),("courses",canvCourses),("assignments",canvAssignments),("weather", Weather.handleMessage),("poetry",poetry)]
 
 notFound :: Message -> DiscordHandler ()
 notFound m = do
@@ -47,7 +52,7 @@ startBot :: IO ()
 startBot = do 
         -- token <- getEnv "DISCORD_TOKEN"
         userFacingError <- runDiscord $ def 
-                { discordToken = pack "ODExOTE1MjYyNDA0MTk4NDUw.YC5JAw.lKLEt2mVBI-6V_kamrEoZUUA0iE", 
+                { discordToken = pack "ODExOTE1MjYyNDA0MTk4NDUw.YC5JAw.TDldbsI9kSidAGkRiix3EBFKOt4", 
                 discordOnEvent = eventHandler }
         TIO.putStrLn userFacingError
 
