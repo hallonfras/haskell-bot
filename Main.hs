@@ -37,26 +37,14 @@ main = do
         startBot
 
 -- List of commands which the bot can run
-commands :: [(String, Message -> DiscordHandler ())]
-commands = [("test", test)]
+commands :: [(Command, Message -> DiscordHandler ())]
+commands = [("joke",dadjoke),("courses",canvCourses),("assignments",canvAssignments),("weather", Weather.handleMessage)]
 
-{- test command
-    replies "the test function works at least" in the same discord channel where the command was sent
-    SIDE EFFECTS: performs a rest call in order to create the reply message
--}
-test :: Message -> DiscordHandler ()
-test m = do
-        restCall (R.CreateMessage (messageChannel m) "the test function works at least")
-        pure ()
-
-{- test command
+{- notFound command
     replies "That command doesnt exist!" in the same discord channel where the command was sent.
     This is used when findCommand doesnt find an appropriate command
     SIDE EFFECTS: performs a rest call in order to create the reply message
 -}
-commands :: [(Command, Message -> DiscordHandler ())]
-commands = [("joke",dadjoke),("courses",canvCourses),("assignments",canvAssignments),("weather", Weather.handleMessage)]
-
 notFound :: Message -> DiscordHandler ()
 notFound m = do
         restCall (R.CreateMessage (messageChannel m) ("command not found"))
