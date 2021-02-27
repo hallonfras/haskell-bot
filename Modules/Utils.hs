@@ -17,8 +17,9 @@ import Data.Text (isPrefixOf, toLower, Text, unpack, pack, isInfixOf, splitAt, s
 class Stringable a where
     stringIt :: a -> String
 
+--stringIt for lists of data
 instance Stringable a => Stringable [a] where
-    stringIt xs = foldl (\ str x -> str ++ stringIt x ++ "\n\n") "" xs
+    stringIt xs = foldl (\ str x -> str ++ stringIt x ++ "\n\n") "" xs --format for lists of data
 
 data MessageData a = Msg {
     value :: a,
@@ -33,13 +34,11 @@ maybeToString :: Show a => Maybe a -> Maybe String
 maybeToString (Just i) = Just (show i)
 maybeToString Nothing = Nothing
 
-jsonToMessageData :: FromJSON a => S8.ByteString -> DiscordHandler (MessageData [a])
-jsonToMessageData json = do
-    let 
-        value = Data.Aeson.decode $ BSL.fromStrict json
+toMessageData :: FromJSON a => Maybe a -> DiscordHandler (MessageData (Maybe a))
+toMessageData value = do
     if apiFail value
-    then do return (Msg [] (E "Failed to retrieve data"))
-    else do return (Msg (fromMaybe value) Void)
+    then do return (Msg Nothing (E "Failed to retrieve data"))
+    else do return (Msg value Void)
 
 apiFail :: Maybe a -> Bool 
 apiFail Nothing = True
@@ -48,17 +47,21 @@ apiFail _ = False
 fromMaybe :: Maybe a -> a
 fromMaybe (Just a) = a
 
+--removes spaces from string
+removeSpace :: Foldable t => t Char -> [Char]
 removeSpace xs = foldl (\clean char -> if char == ' ' then clean else clean ++ [char]  ) "" xs
 
-handleMessage :: (Data a,Show a,Stringable a) => Message -> MessageData a -> Text -> Text -> DiscordHandler ()
+--handles the message B) 
+handleMessage :: (Show a,Stringable a) => Message -> MessageData (Maybe a) -> Text -> Text -> DiscordHandler ()
 handleMessage m msgdata title icon = do
         if Utils.error msgdata /= Void
         then do 
                 sendEmbed m (pack $ getError $ Utils.error msgdata) title icon
         else do 
-                let txt = pack $ stringIt (value msgdata)
+                let txt = pack $ stringIt $ fromMaybe (value msgdata)
                 sendEmbed m txt title icon
 
+--creates and sends embed
 sendEmbed :: Message -> Text -> Text -> Text -> DiscordHandler ()
 sendEmbed m s title icon = do
         restCall (R.CreateMessageEmbed (messageChannel m) (pack "") $

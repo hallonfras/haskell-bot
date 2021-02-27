@@ -9,9 +9,7 @@ import Configuration.Dotenv (loadFile, defaultConfig)
 import Control.Concurrent ( threadDelay )
 import Data.Text (isPrefixOf, toLower, Text, unpack, pack, isInfixOf, splitAt, splitOn)
 import qualified Data.Text.IO as TIO
-import Canvas
-import Utils
-import Joke
+
 import UnliftIO
 
 import Discord
@@ -19,7 +17,14 @@ import Discord.Types
 import qualified Discord.Requests as R
 import Data.List.Split as Split
 import Data.Data ( Data )
+
+
 import qualified Weather
+import Poetry
+import Canvas
+import Utils
+import Joke
+
 
 import qualified Weather
 import qualified Canvas
@@ -38,7 +43,7 @@ main = do
 
 -- List of commands which the bot can run
 commands :: [(Command, Message -> DiscordHandler ())]
-commands = [("joke",dadjoke),("courses",canvCourses),("assignments",canvAssignments),("weather", Weather.handleMessage)]
+commands = [("joke",dadjoke),("courses",canvCourses),("assignments",canvAssignments),("weather", Weather.handleMessage),("poetry",poetry)]
 
 {- notFound command
     replies "That command doesnt exist!" in the same discord channel where the command was sent.
@@ -67,9 +72,9 @@ findCommand list string
 -}
 startBot :: IO ()
 startBot = do 
-        -- token <- getEnv "DISCORD_TOKEN"
+        token <- getEnv "DISCORD_TOKEN"
         userFacingError <- runDiscord $ def 
-                { discordToken = pack "ODExOTE1MjYyNDA0MTk4NDUw.YC5JAw.lKLEt2mVBI-6V_kamrEoZUUA0iE", 
+                { discordToken = pack token, 
                 discordOnEvent = eventHandler }
         TIO.putStrLn userFacingError
 
