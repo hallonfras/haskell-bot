@@ -7,6 +7,7 @@
 module Canvas where
 import Data.Data
 import Data.List
+import System.Environment
 import           Data.Aeson
 import Data.Aeson.Types
 import           Data.String.Builder
@@ -103,17 +104,6 @@ apiRequest source token = do
     response <- httpBS request'
     return (getResponseBody response)
 
-getCourses :: String -> DiscordHandler (MessageData [Course])
-getCourses token = do
-    json <- apiRequest "https://uppsala.instructure.com/api/v1/users/self/courses" token
-    jsonToMessageData json
-
--- https://uppsala.instructure.com/api/v1/courses/26396
-getAssignments :: String -> String -> DiscordHandler (MessageData [Assignment])
-getAssignments token courseid = do
-    json <- apiRequest ("https://uppsala.instructure.com/api/v1/courses/" ++ courseid ++ "/assignments") token
-    jsonToMessageData json
-
 apiRequest' :: String -> [Char] -> IO (S8.ByteString)
 apiRequest' source token = do
     request <- parseRequest source
@@ -122,13 +112,14 @@ apiRequest' source token = do
                     $ request
     response <- httpBS request'
     return (getResponseBody response)
+
 getFolders :: String -> String -> IO ([Folder])
 getFolders token courseid = do
     json <- apiRequest' ("https://uppsala.instructure.com/api/v1/courses/" ++ courseid ++ "/folders") token
     let value = Data.Aeson.decode $ BSL.fromStrict json
     return (fromMaybe value)
 
---rename the local functions so it becomes more clear
+
 sortFolders :: [Folder] -> Folder
 sortFolders folderList = findRoot folderList folderList
     where
@@ -142,19 +133,39 @@ sortFolders folderList = findRoot folderList folderList
                     | fromMaybe (parent_id x) == r_id = buildFolder xs (Folder r_id r_name r_pid ((buildFolder (delete f folders) x):children) files) --if f has parent_id equal to root iq then add (f with its children) to children 
                     | otherwise = buildFolder xs root
 
+
+
+----------------------------------------------------------------------
+getCourses :: String -> DiscordHandler (MessageData (Maybe [Course]))
+getCourses token = do
+    json <- apiRequest "https://uppsala.instructure.com/api/v1/users/self/courses" token
+    let courses = Data.Aeson.decode $ BSL.fromStrict json
+    toMessageData courses
+
+-- https://uppsala.instructure.com/api/v1/courses/26396
+getAssignments :: String -> String -> DiscordHandler (MessageData (Maybe [Assignment]))
+getAssignments token courseid = do
+    json <- apiRequest ("https://uppsala.instructure.com/api/v1/courses/" ++ courseid ++ "/assignments") token
+    let assignments = Data.Aeson.decode $ BSL.fromStrict json
+    toMessageData assignments
+---------------------------------------------------
+
+
+canvas_token = "canv"
 canvAssignments :: Message -> DiscordHandler ()
 canvAssignments m = do
+
         let
                 args = tail $ Split.splitOn "-" (removeSpace $ unpack $ messageText m)
                 courseid = args !! 0 -- courseid is the first and only argument ex. (!assignments -3085)
                 title = pack "Assignments"
                 icon = pack "https://static.thenounproject.com/png/51139-200.png"
-        msgdata <- getAssignments "14589~soDe3Fvwq2zzG4ab8zqPOS7CcJIKsPSybnHE0sPjF7vFTEdGn2eoKaHN9VTUrYqy" courseid
+        msgdata <- getAssignments canvas_token courseid
         handleMessage m msgdata title icon
 
 canvCourses :: Message -> DiscordHandler ()
 canvCourses m = do
         let title = pack "Courses"
             icon = pack "https://cdn2.iconfinder.com/data/icons/online-university/96/computer_training_art_course-512.png"
-        msgdata <- getCourses "14589~soDe3Fvwq2zzG4ab8zqPOS7CcJIKsPSybnHE0sPjF7vFTEdGn2eoKaHN9VTUrYqy"
+        msgdata <- getCourses canvas_token
         handleMessage m msgdata title icon
