@@ -88,6 +88,17 @@
   (major1) == 2 && (major2) == 3 && (minor) <= 8)
 #endif /* MIN_VERSION_http_conduit */
 
+/* package split-0.2.3.4 */
+#ifndef VERSION_split
+#define VERSION_split "0.2.3.4"
+#endif /* VERSION_split */
+#ifndef MIN_VERSION_split
+#define MIN_VERSION_split(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  2 || \
+  (major1) == 0 && (major2) == 2 && (minor) <= 3)
+#endif /* MIN_VERSION_split */
+
 /* package stringbuilder-0.5.1 */
 #ifndef VERSION_stringbuilder
 #define VERSION_stringbuilder "0.5.1"
