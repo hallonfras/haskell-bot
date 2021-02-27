@@ -9,8 +9,6 @@ import Configuration.Dotenv (loadFile, defaultConfig)
 import Control.Concurrent ( threadDelay )
 import Data.Text (isPrefixOf, toLower, Text, unpack, pack, isInfixOf, splitAt, splitOn)
 import qualified Data.Text.IO as TIO
-import Canvas
-import Joke
 import UnliftIO
 
 import Discord
@@ -21,7 +19,11 @@ import Data.Data ( Data )
 
 type Command = String 
 type Argument = String
+
+
 import qualified Weather
+import qualified Canvas
+import qualified Joke
 
 {- main
     loads the .env file using the Dotenv library. Then calls startbot
