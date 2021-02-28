@@ -46,6 +46,7 @@ instance FromJSON Weather where
 
 {- apiRequest
      helper function for performing the api request
+     RETURNS: A DiscordHandler containing a ByteString representing the api response
      SIDE EFFECTS: performs an http request
 -}
 apiRequest :: String -> DiscordHandler S8.ByteString
@@ -57,6 +58,7 @@ apiRequest source = do
     
 {- getWeather
      queries the openweathermap api for the local weather
+     RETURNS: a DiscordHandler containing a MessageData containing the weather data represented as a Weather
      SIDE EFFECTS: performs an http request as well as decoding the resulting JSON
 -}
 getWeather :: DiscordHandler (Utils.MessageData (Maybe Weather))
