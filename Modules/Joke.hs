@@ -24,6 +24,7 @@ instance FromJSON Joke where
                 joke  <- v .: "joke"
                 return (Joke {joke = joke})
         parseJSON _ = mempty
+<<<<<<< HEAD
 
 
 {-  jokeRequest
@@ -49,9 +50,11 @@ jokeRequest = do
     EXAMPLES: getJoke == (Msg (Maybe (Joke joke)) Void)
 -}
 
+=======
+>>>>>>> main
 getJoke :: DiscordHandler (MessageData (Maybe Joke))
 getJoke = do
-        json <- jokeRequest
+        json <- apiRequest "https://icanhazdadjoke.com/" ""
         let joke = Data.Aeson.decode $ BSL.fromStrict json
         toMessageData joke
 
