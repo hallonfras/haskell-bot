@@ -39,7 +39,7 @@ main = do
 
 -- List of commands which the bot can run
 commands :: [(Command, Message -> DiscordHandler ())]
-commands = [("joke",dadjoke),("courses",canvCourses),("assignments",canvAssignments),("weather", Weather.handleMessage),("poetry",poetry)]
+commands = [("joke",dadjoke),("courses",canvCourses),("assignments",canvAssignments),("weather", Weather.handleMessage),("poetry",poetry),("files",canvFiles)]
 
 {- notFound command
     replies "That command doesnt exist!" in the same discord channel where the command was sent.

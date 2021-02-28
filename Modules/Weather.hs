@@ -13,6 +13,7 @@ import System.Environment
 import Discord
 import Discord.Types
 import qualified Discord.Requests as R
+import Utils
 
 import qualified Utils
 
@@ -43,7 +44,6 @@ instance FromJSON Weather where
         return (Weather { description = desc, temperature = temp, icon = ic })
     parseJSON _ = mempty
 
-
 {- apiRequest
      helper function for performing the api request
      RETURNS: A DiscordHandler containing a ByteString representing the api response
@@ -65,6 +65,7 @@ getWeather :: DiscordHandler (Utils.MessageData (Maybe Weather))
 getWeather = do
     json <- apiRequest "https://api.openweathermap.org/data/2.5/weather?q=Uppsala&appid=ce3a449055d96d97c82166fff5434393"
     let weather = Data.Aeson.decode $ BSL.fromStrict json
+
     Utils.toMessageData weather
 
 -- extracts the icon value from the messagedata. then performs some string concatenation
