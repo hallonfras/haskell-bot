@@ -95,7 +95,7 @@ instance FromJSON Assignment where
 --api request to json response
 --lägg till felhantering
 
-apiRequest :: String -> [Char] -> DiscordHandler (S8.ByteString)
+apiRequest :: String -> [Char] -> DiscordHandler S8.ByteString
 apiRequest source token = do
     request <- parseRequest source
     let request' = setRequestMethod "GET"
@@ -104,14 +104,6 @@ apiRequest source token = do
     response <- httpBS request'
     return (getResponseBody response)
 
-apiRequest' :: String -> [Char] -> IO (S8.ByteString)
-apiRequest' source token = do
-    request <- parseRequest source
-    let request' = setRequestMethod "GET"
-                    $ setRequestHeader "Authorization" [S8.pack ("Bearer " ++ token)]
-                    $ request
-    response <- httpBS request'
-    return (getResponseBody response)
 
 getFolders :: String -> String -> IO ([Folder])
 getFolders token courseid = do

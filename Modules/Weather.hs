@@ -42,7 +42,7 @@ instance FromJSON Weather where
 apiRequest :: String -> DiscordHandler S8.ByteString
 apiRequest source = do
     request <- parseRequest source
-    let request' = setRequestMethod (S8.pack "GET") $ request
+    let request' = setRequestMethod (S8.pack "GET") request
     response <- httpBS request'
     return (getResponseBody response)
     
@@ -55,7 +55,7 @@ getWeather  = do
     Utils.toMessageData weather
 
 
-weatherIcon :: (Utils.MessageData (Maybe Weather)) -> Text
+weatherIcon :: Utils.MessageData (Maybe Weather) -> Text
 weatherIcon Utils.Msg{Utils.value=(Just (Weather _ _ icon))} = pack ("http://openweathermap.org/img/wn/" ++ icon ++ "@2x.png") 
 
 handleMessage :: Message -> DiscordHandler ()
