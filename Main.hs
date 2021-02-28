@@ -26,10 +26,6 @@ import Utils
 import Joke
 
 
-import qualified Weather
-import qualified Canvas
-import qualified Joke
-
 
 type Command = String 
 
@@ -52,7 +48,12 @@ commands = [("joke",dadjoke),("courses",canvCourses),("assignments",canvAssignme
 -}
 notFound :: Message -> DiscordHandler ()
 notFound m = do
-        restCall (R.CreateMessage (messageChannel m) ("command not found"))
+        restCall (R.CreateMessageEmbed (messageChannel m) (pack "") $
+         def { createEmbedTitle = "Bruh",
+         createEmbedFooterText = "That command doesn't exist!", 
+         createEmbedThumbnail = Just $ CreateEmbedImageUrl $ "https://cdn.discordapp.com/attachments/355057325813399572/815537327803072542/gameandwatch.gif",
+         createEmbedImage = Just $ CreateEmbedImageUrl $ "https://cdn.discordapp.com/attachments/355057325813399572/815536741703876648/gameandwatch2.gif"
+        })
         pure ()
 
 {- findCommand commandList commandName

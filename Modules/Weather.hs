@@ -15,6 +15,7 @@ import Discord.Types
 import qualified Discord.Requests as R
 import Utils
 
+import qualified Utils
 
 
 data Weather = Weather { 
@@ -23,6 +24,8 @@ data Weather = Weather {
   , icon        :: String
 } deriving (Show)
 
+instance Utils.Stringable Weather where
+    stringIt (Weather desc temp _) = "The weather in Uppsala is " ++ desc ++ " with a temperature of " ++ show (temp - 273.15)
 
 instance FromJSON Weather where
     parseJSON (Object obj) = do
@@ -35,31 +38,22 @@ instance FromJSON Weather where
         return (Weather { description = desc, temperature = temp, icon = ic })
     parseJSON _ = mempty
     
-getWeather :: DiscordHandler (Maybe Weather)
+getWeather :: DiscordHandler (Utils.MessageData (Maybe Weather))
 getWeather  = do
     let api = "https://api.openweathermap.org/data/2.5/weather?q=Uppsala&appid=ce3a449055d96d97c82166fff5434393"
     json <- apiRequest api ""
     let 
         weather = Data.Aeson.decode $ BSL.fromStrict json :: Maybe Weather
-    return weather
+    Utils.toMessageData weather
 
-weatherToString :: Maybe Weather -> String
-weatherToString (Just (Weather desc temp _)) = "The weather in Uppsala is " ++ desc ++ " with a temperature of " ++ show (temp - 273.15)
-weatherToString Nothing = ""
 
-weatherIcon :: Maybe Weather -> String
-weatherIcon (Just (Weather _ _ icon)) = "http://openweathermap.org/img/wn/" ++ icon ++ "@2x.png"
-weatherIcon Nothing = ""
+weatherIcon :: (Utils.MessageData (Maybe Weather)) -> Text
+weatherIcon Utils.Msg{Utils.value=(Just (Weather _ _ icon))} = pack ("http://openweathermap.org/img/wn/" ++ icon ++ "@2x.png") 
 
 handleMessage :: Message -> DiscordHandler ()
 handleMessage m = do
     weather <- getWeather
-    let icon = pack (weatherIcon weather)
-    let string = pack (weatherToString weather)
-    _ <- restCall (R.CreateMessageEmbed (messageChannel m) "" $
-            def { createEmbedTitle = "CoolNiceWeather",
-             createEmbedDescription = string, 
-             createEmbedThumbnail = Just $ CreateEmbedImageUrl icon
-            })
-    return()
+    let icon = weatherIcon weather
+    Utils.handleMessage m weather "Todays weather" icon
+    
 
