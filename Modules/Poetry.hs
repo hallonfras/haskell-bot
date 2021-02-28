@@ -38,16 +38,9 @@ instance FromJSON Poetry where
 
 getPoetry :: DiscordHandler (MessageData (Maybe [Poetry]))
 getPoetry = do
-        json <- poetryrequest
+        json <- apiRequest "https://poetrydb.org/random" ""
         let poetry = Data.Aeson.decode $ BSL.fromStrict json :: Maybe [Poetry]
         toMessageData poetry
-
-poetryrequest :: DiscordHandler (S8.ByteString)
-poetryrequest = do
-        let poetryrequest' = setRequestMethod "GET"
-                $ "https://poetrydb.org/random"         
-        response <- httpBS poetryrequest'
-        return (getResponseBody response)
 
 poetry :: Message -> DiscordHandler ()
 poetry m = do

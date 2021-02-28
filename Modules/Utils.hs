@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 module Utils where
 
 import Data.Data
@@ -10,6 +11,7 @@ import qualified Discord.Requests as R
 
 import qualified Data.ByteString.Char8 as S8
 import qualified Data.ByteString.Lazy  as BSL
+import           Network.HTTP.Simple
 
 import Data.Text (isPrefixOf, toLower, Text, unpack, pack, isInfixOf, splitAt, splitOn)
 
@@ -29,6 +31,16 @@ data Error = Void | E String deriving (Eq)
 
 getError :: Error -> String
 getError (E s) = s
+
+apiRequest :: String -> [Char] -> DiscordHandler (S8.ByteString)
+apiRequest source token = do
+    request <- parseRequest source
+    let request' = setRequestMethod "GET"
+                    $ setRequestHeader "Authorization" [S8.pack ("Bearer " ++ token)]
+                    $ setRequestHeader "Accept" ["application/json"]
+                    $ request
+    response <- httpBS request'
+    return (getResponseBody response)
 
 maybeToString :: Show a => Maybe a -> Maybe String
 maybeToString (Just i) = Just (show i)

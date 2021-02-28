@@ -13,6 +13,7 @@ import System.Environment
 import Discord
 import Discord.Types
 import qualified Discord.Requests as R
+import Utils
 
 
 
@@ -33,21 +34,11 @@ instance FromJSON Weather where
         temp <- dataObj .: "temp"
         return (Weather { description = desc, temperature = temp, icon = ic })
     parseJSON _ = mempty
-
---api request to json response
---lägg till felhantering
-apiRequest :: String -> DiscordHandler S8.ByteString
-apiRequest source = do
-    request <- parseRequest source
-    let request' = setRequestMethod (S8.pack "GET") $ request
-    response <- httpBS request'
-    return (getResponseBody response)
-    
     
 getWeather :: DiscordHandler (Maybe Weather)
 getWeather  = do
     let api = "https://api.openweathermap.org/data/2.5/weather?q=Uppsala&appid=ce3a449055d96d97c82166fff5434393"
-    json <- apiRequest api
+    json <- apiRequest api ""
     let 
         weather = Data.Aeson.decode $ BSL.fromStrict json :: Maybe Weather
     return weather
