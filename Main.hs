@@ -61,6 +61,7 @@ notFound m = do
      RETURNS: the function which is associated with commandName or notFound if no appropriate command is found
   -}
 findCommand :: [(String, (Message -> DiscordHandler ()) )] -> String -> (Message -> DiscordHandler ())
+-- VARIANT: length list
 findCommand list string
         | null list = notFound -- base case
         | fst (head list) == string = snd (head list) -- matching command is found
