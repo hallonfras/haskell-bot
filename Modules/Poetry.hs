@@ -50,22 +50,10 @@ instance FromJSON Poetry where
 
 getPoetry :: DiscordHandler (MessageData (Maybe [Poetry]))
 getPoetry = do
-<<<<<<< HEAD
-        json <- apirequest "https://poetrydb.org/random" ""
-        let poetry = Data.Aeson.decode $ BSL.fromStrict json :: Maybe [Poetry]
-        toMessageData poetry
-
-{-  poetry m
-    Creates an embedded discord message, which title is the poems title aswell as its author, containing the poem alongside an icon.
-    SIDE EFFECT: Performs an http request
--}
-
-=======
         json <- apiRequest "https://poetrydb.org/random" ""
         let poetry = Data.Aeson.decode $ BSL.fromStrict json :: Maybe [Poetry]
         toMessageData poetry
 
->>>>>>> main
 poetry :: Message -> DiscordHandler ()
 poetry m = do
         msgdata <- getPoetry

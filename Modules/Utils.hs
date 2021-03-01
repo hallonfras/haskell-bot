@@ -5,6 +5,8 @@ import Data.Data
 import Data.Aeson
 import Data.Aeson.Types
 
+import Data.Maybe
+
 import Discord
 import Discord.Types
 import qualified Discord.Requests as R
@@ -98,7 +100,7 @@ handleMessage m msgdata title icon = do
                     error_icon = pack "https://cdn0.iconfinder.com/data/icons/shift-free/32/Error-512.png"
                 sendEmbed m (pack $ getError $ Utils.error msgdata) error_title error_icon 
         else do 
-                let txt = pack $ stringIt $ fromMaybe (value msgdata)
+                let txt = pack $ stringIt $ Utils.fromMaybe (value msgdata)
                 sendEmbed m txt title icon
 
 {- sendEmbed message string title icon

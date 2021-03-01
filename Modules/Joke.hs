@@ -24,34 +24,7 @@ instance FromJSON Joke where
                 joke  <- v .: "joke"
                 return (Joke {joke = joke})
         parseJSON _ = mempty
-<<<<<<< HEAD
 
-
-{-  jokeRequest
-    Requests a dad joke in JSON FORMAT from https://icanhazdadjoke.com/ using GET.
-    RETURNS: A random "joke" and its corresponding "id" and "status"
-    EXAMPLES: jokeRequest ==
-            {"id: R7UfaahVfFd,
-              joke: My dog used to chase people on a bike a lot. It got so bad I had to take his bike away.,
-              status: 200"}
--}
-
-jokeRequest :: DiscordHandler S8.ByteString
-jokeRequest = do
-        let request = setRequestMethod "GET"
-                $ setRequestHeader "Accept" ["application/json"]
-                $ "https://icanhazdadjoke.com/"           
-        response <- httpBS request
-        return (getResponseBody response)
-
-{-  getJoke
-    Returns a messageData containing the joke taken from https://icanhazdadjoke.com/ using APIrequest
-    RETURNS: A Maybe of the joke contained within a messageData
-    EXAMPLES: getJoke == (Msg (Maybe (Joke joke)) Void)
--}
-
-=======
->>>>>>> main
 getJoke :: DiscordHandler (MessageData (Maybe Joke))
 getJoke = do
         json <- apiRequest "https://icanhazdadjoke.com/" ""
