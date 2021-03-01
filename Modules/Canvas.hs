@@ -6,11 +6,12 @@
 
 module Canvas (canvCourses,canvAssignments,canvFiles)where
 import Data.Data
+
+import Data.Maybe
 import Data.List
 import System.Environment
 import           Data.Aeson
 import Data.Aeson.Types
-import           Data.String.Builder
 import qualified Data.ByteString       as BS
 import qualified Data.ByteString.Char8 as S8
 import qualified Data.ByteString.Lazy  as BSL
@@ -318,7 +319,7 @@ fileStructure folders files = sortFolders updatedfldrs
 
 {- sortFolders folders
      Sorts list of folders in to 1 root folder containing its child folders
-     PRE: There should only be 1 root folder in the list
+     PRE: There should be 1 and only 1 root folder in the list
      RETURNS: root folder containing its child folders
      SIDE EFFECTS: --
      EXAMPLES: sortFolders [(Folder "1" "root" Nothing [] []),(Folder "2" "root child" (Just "1") [] [])]
@@ -327,11 +328,26 @@ fileStructure folders files = sortFolders updatedfldrs
 sortFolders :: [Folder] -> Folder
 sortFolders folderList = findRoot folderList folderList
     where
+        {- findRoot folderList folders
+                Finds the root folder and then calls buildFolder
+                PRE: folderList = folders
+                RETURNS: the result of buildFolder
+        -}
+        --VARIANT: folderList
+        findRoot:: [Folder] -> [Folder] -> Folder
         findRoot (f:fs) folders = -- searches for root folder
-            if parent_id f == Nothing then buildFolder (delete f folders) f -- when root folder is found, calls aux function and removes root from golders
+            if parent_id f == Nothing then buildFolder (delete f folders) f -- when root folder is found, calls aux function and removes root from folders
             else findRoot fs folders
             where
-                --builds folder structure from root to bottom
+                {- buildFolder folders root
+                Builds folder structure from root folder to bottom
+                PRE: folders does not contain root
+                RETURNS: root folder containing its child folders 
+                SIDE EFFECTS: --
+                EXAMPLES: sortFolders [(Folder "2" "root child" (Just "1") [] [])] (Folder "1" "root" Nothing [] [])
+                == Folder "1" "root" Nothing [Folder "2" "root child" (Just "1") [] []] []
+        -}      --VARIANT folders
+                buildFolder :: [Folder] -> Folder -> Folder
                 buildFolder [] root = root
                 buildFolder (x:xs) root@(Folder r_id r_name r_pid children files)
                     | Utils.fromMaybe (parent_id x) == r_id = buildFolder xs (Folder r_id r_name r_pid ((buildFolder (delete f folders) x):children) files) --if f has parent_id equal to root iq then add (f with its children) to children 
@@ -348,10 +364,21 @@ sortFolders folderList = findRoot folderList folderList
 addFiles :: [Folder] -> [File] -> [Folder]
 addFiles folders files = foldl searchFolder folders files
     where
-        --calls aux function that keeps track of updated folder list
+        {- searchFolder fs updatedfs file
+                Adds file to its parent folder and rebuilds an updated version of folders
+                PRE: --
+                RETURNS: updated version of folders containing file
+                SIDE EFFECTS: --
+                EXAMPLES: 
+        -}
+        searchFolder :: [Folder] -> File -> [Folder]
         searchFolder fs file = searchFolder' fs [] file
             where
-                --searches for the folder the file belongs in and adds it to it, all folders are moved to updatedfs
+                {- searchFolder' fs updatedfs file
+                searchFolder with accumulator as an extra argument because a function in a foldl only can take 2 arguments
+               -}
+                --VARIANT: length fs
+                searchFolder' :: [Folder] -> [Folder] -> File -> [Folder]
                 searchFolder' [] updatedfs _ = updatedfs
                 searchFolder' ((Folder id name p_id c folder_files):xs) updatedfs file
                     | id == file_folder_id file = searchFolder' xs (Folder id name p_id c (file:folder_files):updatedfs) file

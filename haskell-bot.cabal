@@ -28,7 +28,6 @@ executable haskell-bot
                      , http-conduit
                      , aeson
                      , bytestring
-                     , stringbuilder
                      , dotenv
                      ,hint
                      ,split

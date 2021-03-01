@@ -45,9 +45,9 @@ instance FromJSON Weather where
     parseJSON _ = mempty
     
 {- getWeather
-     queries the openweathermap api for the local weather
-     RETURNS: a DiscordHandler containing a MessageData containing the weather data represented as a Weather
-     SIDE EFFECTS: performs an http request as well as decoding the resulting JSON
+    queries the openweathermap api for the local weather
+    RETURNS: a DiscordHandler containing a MessageData containing the weather data represented as a Weather
+    SIDE EFFECTS: performs an http request as well as decoding the resulting JSON
 -}
 getWeather :: DiscordHandler (Utils.MessageData (Maybe Weather))
 getWeather = do

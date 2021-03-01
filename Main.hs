@@ -3,7 +3,6 @@
 
 import Control.Monad (when, void)
 import System.Environment
-import Data.String.Builder
 
 import Configuration.Dotenv (loadFile, defaultConfig)
 import Control.Concurrent ( threadDelay )
