@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}  -- allows "string literals" to be Text
-module Weather where 
+module Weather (weather) where 
 
 import Control.Monad
 
@@ -43,18 +43,6 @@ instance FromJSON Weather where
         temp <- dataObj .: "temp"
         return (Weather { description = desc, temperature = temp, icon = ic })
     parseJSON _ = mempty
-
-{- apiRequest
-     helper function for performing the api request
-     RETURNS: A DiscordHandler containing a ByteString representing the api response
-     SIDE EFFECTS: performs an http request
--}
-apiRequest :: String -> DiscordHandler S8.ByteString
-apiRequest source = do
-    request <- parseRequest source
-    let request' = setRequestMethod (S8.pack "GET") $ request
-    response <- httpBS request'
-    return (getResponseBody response)
     
 {- getWeather
      queries the openweathermap api for the local weather
@@ -63,7 +51,7 @@ apiRequest source = do
 -}
 getWeather :: DiscordHandler (Utils.MessageData (Maybe Weather))
 getWeather = do
-    json <- apiRequest "https://api.openweathermap.org/data/2.5/weather?q=Uppsala&appid=ce3a449055d96d97c82166fff5434393"
+    json <- apiRequest "https://api.openweathermap.org/data/2.5/weather?q=Uppsala&appid=ce3a449055d96d97c82166fff5434393" ""
     let weather = Data.Aeson.decode $ BSL.fromStrict json
 
     Utils.toMessageData weather
@@ -72,12 +60,12 @@ getWeather = do
 weatherIcon :: (Utils.MessageData (Maybe Weather)) -> Text
 weatherIcon Utils.Msg{Utils.value=(Just (Weather _ _ icon))} = pack ("http://openweathermap.org/img/wn/" ++ icon ++ "@2x.png") 
 
-{- handleMessage message
+{- weather message
      gets the weatherdata and the icon before using the standard messagehandling from utils
      SIDE EFFECTS: same as Utils.handleMessage, performs a rest call to the discord api
 -}
-handleMessage :: Message -> DiscordHandler ()
-handleMessage m = do
+weather :: Message -> DiscordHandler ()
+weather m = do
     weather <- getWeather
     let icon = weatherIcon weather
     Utils.handleMessage m weather "Todays weather" icon

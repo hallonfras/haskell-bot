@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-} 
-module Poetry where
+module Poetry (poetry) where
 
 import Data.Aeson
 

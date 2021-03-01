@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}  -- allows "string literals" to be Text
-module Joke where
+module Joke (joke) where
 
 import Data.Aeson
 

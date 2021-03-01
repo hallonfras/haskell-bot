@@ -4,7 +4,7 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE DeriveGeneric   #-}
 
-module Canvas where
+module Canvas (canvCourses,canvAssignments,canvFiles)where
 import Data.Data
 import Data.List
 import System.Environment
