@@ -14,7 +14,7 @@ import qualified Data.ByteString.Lazy  as BSL
 import Data.Text (isPrefixOf, toLower, Text, unpack, pack, isInfixOf, splitAt, splitOn)
 import Utils
 
-data Joke = Joke {joke :: String} deriving (Show)
+newtype Joke = Joke {joke :: String} deriving (Show)
 
 instance Stringable Joke where
         stringIt (Joke j) = j
@@ -24,19 +24,22 @@ instance FromJSON Joke where
                 joke  <- v .: "joke"
                 return (Joke {joke = joke})
         parseJSON _ = mempty
+
 getJoke :: DiscordHandler (MessageData (Maybe Joke))
 getJoke = do
         json <- apiRequest "https://icanhazdadjoke.com/" ""
         let joke = Data.Aeson.decode $ BSL.fromStrict json
         toMessageData joke
 
-fromMaybeJoke :: Maybe Joke -> String 
-fromMaybeJoke (Just (Joke j)) = j
+{-  dadjoke m
+    Creates an embedded discord message, titled "Dad joke", containing the joke alongside an icon.
+    SIDE EFFECT: Performs an http request
+-}
 
 dadjoke :: Message -> DiscordHandler ()
 dadjoke m = do
         msgdata <- getJoke
         let
-                title = "Joke á la David"
+                title = "Dad joke"
                 icon = "http://assets.stickpng.com/images/586294223796e30ac446872f.png"
         handleMessage m msgdata title icon

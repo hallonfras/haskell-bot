@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}  -- allows "string literals" to be Text
-module Weather where 
+module Weather where
 
 import Control.Monad
 
@@ -52,18 +52,18 @@ instance FromJSON Weather where
 apiRequest :: String -> DiscordHandler S8.ByteString
 apiRequest source = do
     request <- parseRequest source
-    let request' = setRequestMethod (S8.pack "GET") $ request
+    let request' = setRequestMethod (S8.pack "GET") request
     response <- httpBS request'
     return (getResponseBody response)
     
 {- getWeather
-     queries the openweathermap api for the local weather
-     RETURNS: a DiscordHandler containing a MessageData containing the weather data represented as a Weather
-     SIDE EFFECTS: performs an http request as well as decoding the resulting JSON
+    queries the openweathermap api for the local weather
+    RETURNS: a DiscordHandler containing a MessageData containing the weather data represented as a Weather
+    SIDE EFFECTS: performs an http request as well as decoding the resulting JSON
 -}
 getWeather :: DiscordHandler (Utils.MessageData (Maybe Weather))
 getWeather = do
-    json <- apiRequest "https://api.openweathermap.org/data/2.5/weather?q=Uppsala&appid=ce3a449055d96d97c82166fff5434393"
+    json <- Weather.apiRequest "https://api.openweathermap.org/data/2.5/weather?q=Uppsala&appid=ce3a449055d96d97c82166fff5434393"
     let weather = Data.Aeson.decode $ BSL.fromStrict json
 
     Utils.toMessageData weather
@@ -73,8 +73,8 @@ weatherIcon :: (Utils.MessageData (Maybe Weather)) -> Text
 weatherIcon Utils.Msg{Utils.value=(Just (Weather _ _ icon))} = pack ("http://openweathermap.org/img/wn/" ++ icon ++ "@2x.png") 
 
 {- handleMessage message
-     gets the weatherdata and the icon before using the standard messagehandling from utils
-     SIDE EFFECTS: same as Utils.handleMessage, performs a rest call to the discord api
+    gets the weatherdata and the icon before using the standard messagehandling from utils
+    SIDE EFFECTS: same as Utils.handleMessage, performs a rest call to the discord api
 -}
 handleMessage :: Message -> DiscordHandler ()
 handleMessage m = do

@@ -6,11 +6,12 @@
 
 module Canvas where
 import Data.Data
+
+import Data.Maybe
 import Data.List
 import System.Environment
 import           Data.Aeson
 import Data.Aeson.Types
-import           Data.String.Builder
 import qualified Data.ByteString       as BS
 import qualified Data.ByteString.Char8 as S8
 import qualified Data.ByteString.Lazy  as BSL
@@ -136,10 +137,10 @@ getFileStructure :: String -> String -> DiscordHandler (MessageData (Maybe Folde
 getFileStructure token courseid = do
     folders <- getFolders token courseid
     files <- getFiles token courseid
-    if apiFail folders || apiFail files
+    if isNothing folders || isNothing files
     then do toMessageData Nothing
     else do 
-     let folder = fileStructure (fromMaybe folders) (fromMaybe files)
+     let folder = fileStructure (Utils.fromMaybe folders) (Utils.fromMaybe files)
      toMessageData (Just folder)
 
 
@@ -220,7 +221,7 @@ sortFolders folderList = findRoot folderList folderList
                 --builds folder structure from root to bottom
                 buildFolder [] root = root
                 buildFolder (x:xs) root@(Folder r_id r_name r_pid children files)
-                    | fromMaybe (parent_id x) == r_id = buildFolder xs (Folder r_id r_name r_pid ((buildFolder (delete f folders) x):children) files) --if f has parent_id equal to root iq then add (f with its children) to children 
+                    | Utils.fromMaybe (parent_id x) == r_id = buildFolder xs (Folder r_id r_name r_pid ((buildFolder (delete f folders) x):children) files) --if f has parent_id equal to root iq then add (f with its children) to children 
                     | otherwise = buildFolder xs root
 
 --adds files to list of folders according to id
