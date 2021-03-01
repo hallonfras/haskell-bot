@@ -21,6 +21,8 @@
 --
 -- The @'Forest' a@ type represents a forest of @'Tree' a@s.
 --
+
+-- We've only modified 1 string in the draw function // DISCORD BOT
 -----------------------------------------------------------------------------
 
 module TreePrint(

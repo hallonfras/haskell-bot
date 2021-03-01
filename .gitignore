@@ -1,4 +1,3 @@
 .env
-dist-newstyle/
-dist/
-Scraps.hs
+dist-newstyle
+dist

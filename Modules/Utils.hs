@@ -14,6 +14,7 @@ import qualified Data.ByteString.Lazy  as BSL
 import           Network.HTTP.Simple
 
 import Data.Text (isPrefixOf, toLower, Text, unpack, pack, isInfixOf, splitAt, splitOn)
+import Data.Maybe
 
 
 class Stringable a where
@@ -32,6 +33,14 @@ data Error = Void | E String deriving (Eq)
 getError :: Error -> String
 getError (E s) = s
 
+{- apiRequest source token
+     Sends api request to source and returns a json response
+     PRE: --
+     RETURNS: a json response
+     SIDE EFFECTS: performs a http request
+     EXAMPELS --
+  -}
+
 apiRequest :: String -> [Char] -> DiscordHandler (S8.ByteString)
 apiRequest source token = do
     request <- parseRequest source
@@ -48,13 +57,9 @@ maybeToString Nothing = Nothing
 
 toMessageData :: FromJSON a => Maybe a -> DiscordHandler (MessageData (Maybe a))
 toMessageData value = do
-    if apiFail value
+    if isNothing value -- if api failed to retrieve data
     then do return (Msg Nothing (E "Failed to retrieve data"))
     else do return (Msg value Void)
-
-apiFail :: Maybe a -> Bool 
-apiFail Nothing = True
-apiFail _ = False
 
 fromMaybe :: Maybe a -> a
 fromMaybe (Just a) = a
@@ -73,7 +78,7 @@ handleMessage m msgdata title icon = do
                     error_icon = pack "https://cdn0.iconfinder.com/data/icons/shift-free/32/Error-512.png"
                 sendEmbed m (pack $ getError $ Utils.error msgdata) error_title error_icon 
         else do 
-                let txt = pack $ stringIt $ fromMaybe (value msgdata)
+                let txt = pack $ stringIt $ Utils.fromMaybe (value msgdata)
                 sendEmbed m txt title icon
 
 --creates and sends embed
@@ -85,3 +90,6 @@ sendEmbed m s title icon = do
              createEmbedThumbnail = Just $ CreateEmbedImageUrl $ icon
             })
         pure ()
+
+hyperref :: [Char] -> [Char] -> [Char]
+hyperref text url = "[" ++ text ++ "]" ++ "(" ++ url ++")"

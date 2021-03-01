@@ -30,9 +30,6 @@ getJoke = do
         let joke = Data.Aeson.decode $ BSL.fromStrict json
         toMessageData joke
 
-fromMaybeJoke :: Maybe Joke -> String 
-fromMaybeJoke (Just (Joke j)) = j
-
 dadjoke :: Message -> DiscordHandler ()
 dadjoke m = do
         msgdata <- getJoke
