@@ -1,5 +1,9 @@
 {-# LANGUAGE OverloadedStrings #-}  -- allows "string literals" to be Text
-module Joke (dadjoke) where
+module Joke (
+        dadjoke,
+        Joke (..)
+
+) where
 
 import Data.Aeson
 
@@ -18,7 +22,7 @@ import Utils
 
   joke - the joke in a string
 -}
-newtype Joke = Joke {joke :: String} deriving (Show)
+newtype Joke = Joke {joke :: String} deriving (Show, Eq)
 
 -- defines stringIt for the joke type
 instance Stringable Joke where
