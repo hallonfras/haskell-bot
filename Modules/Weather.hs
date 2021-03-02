@@ -1,5 +1,8 @@
 {-# LANGUAGE OverloadedStrings #-}  -- allows "string literals" to be Text
-module Weather (weather) where 
+module Weather (
+    weather,
+    Weather (..)
+) where 
 
 import Control.Monad
 
@@ -25,7 +28,7 @@ data Weather = Weather {
     description :: String
   , temperature :: Float
   , icon        :: String
-} deriving (Show)
+} deriving (Show, Eq)
 
 -- Defines how the weather type is converted to string
 -- (yes we could just have used show but this is cooler)
