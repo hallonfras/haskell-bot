@@ -1,5 +1,5 @@
 <div align="center">
-	<img src="https://files.beppp.club/Ubot.png" width="400"/>
+	<img src="https://files.beppp.club/Ubt.png" width="400"/>
 </div>
 <div align="center">
 	<b>A Discord bot for Uppsala students!</b>
