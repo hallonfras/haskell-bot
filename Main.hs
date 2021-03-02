@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}  -- allows "string literals" to be Text
 {-# LANGUAGE DeriveDataTypeable #-}
+module Main where
 
 import Control.Monad (when, void)
 import System.Environment
@@ -26,7 +27,7 @@ import Joke
 
 
 
-type Command = String 
+
 
 {- main
     loads the .env file using the Dotenv library. Then calls startbot
@@ -36,6 +37,8 @@ main = do
         loadFile defaultConfig
         startBot
 
+-- slightly more intuitive commands array
+type Command = String 
 -- List of commands which the bot can run
 commands :: [(Command, Message -> DiscordHandler ())]
 commands = [("joke",dadjoke),("courses",canvCourses),("assignments",canvAssignments),("weather", weather),("poetry",poetry),("files",canvFiles)]
