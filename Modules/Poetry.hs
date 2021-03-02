@@ -1,5 +1,8 @@
 {-# LANGUAGE OverloadedStrings #-} 
-module Poetry (poetry) where
+module Poetry (
+        poetry,
+        Poetry (..)
+) where
 
 import Data.Aeson
 
@@ -24,7 +27,7 @@ data Poetry = Poetry {
     title :: String
     , author :: String
     , lines :: [String]
-    } deriving (Show)
+    } deriving (Show, Eq)
 
 -- defines stringIt for the poetry type
 instance Stringable Poetry where
