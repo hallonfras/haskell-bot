@@ -56,7 +56,6 @@ getWeather :: DiscordHandler (Utils.MessageData (Maybe Weather))
 getWeather = do
     json <- apiRequest "https://api.openweathermap.org/data/2.5/weather?q=Uppsala&appid=ce3a449055d96d97c82166fff5434393" ""
     let weather = Data.Aeson.decode $ BSL.fromStrict json
-
     Utils.toMessageData weather
 
 -- extracts the icon value from the messagedata. then performs some string concatenation
