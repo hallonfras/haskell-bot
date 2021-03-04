@@ -24,7 +24,3 @@ test_filetotree = TestCase (assertEqual "file to tree" (Node "[example.png](www.
 tests = TestList [test1,test2,test3,test_filestructure,test_sortfolders,test_addfiles,test_foldertotree,test_folderstotrees,test_filetotree]
 
 runTests = runTestTT tests
-
-
-
-[(Folder "2" "root child" (Just "1") [] []),(Folder "1" "root" Nothing [] [File "101" "file1" "www.file.com" "1"])]
