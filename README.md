@@ -12,9 +12,14 @@
 
 ## 🏃 Setup
 1. Clone the repository
-2. Run cabal repl
-3. Run the main function in Main.hs
+2. Create a .env file in the repositry containing the following text: DISCORD_TOKEN= "" , replace the "" with your discord token
+3. Run cabal repl
+4. Run the main function in Main.hs
 
 ## 📌 Running tests
 1. Load the Tests module
 2. Run the runtests function
+
+NOTE: Missing dependencies may have to be installed for the program to work. To install these run the "cabal repl" command. If anything is missing it will be displayed. To install the missing dependencies write " cabal install "DEPENDENCY" ".
+
+Cabal repl may have you end up on modules other than main, if so use ":l main" to fix this.
