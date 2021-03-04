@@ -4,7 +4,7 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE DeriveGeneric   #-}
 
-module Canvas where
+module Canvas (Folder(..),File(..),Assignment(..),Course(..),canvCourses,canvFiles,canvAssignments,filestructure,addFiles,sortFolders,foldersToTree,folderToTree,fileToTree,filesToTree) where
 import Data.Data
 
 import Data.Maybe
