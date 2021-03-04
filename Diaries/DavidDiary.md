@@ -40,11 +40,6 @@ The poetry function was now fully working.
 
 Split the JokePoetry module into the seperate modules "Joke.hs" and "Poetry.hs"
 
-27/2
----
-Solved the issue (with the help of Alex) which turned out to be me not having poetry implemented as an array in the converter function.
-
-Split the JokePoetry module into the seperate modules "Joke.hs" and "Poetry.hs".
 
 28/2
 ---
