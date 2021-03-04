@@ -4,7 +4,7 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE DeriveGeneric   #-}
 
-module Canvas (Folder(..),File(..),Assignment(..),Course(..),canvCourses,canvFiles,canvAssignments,fileStructure,addFiles,sortFolders,foldersToTrees,folderToTree,fileToTree,filesToTrees) where
+module Canvas (Folder(..),File(..),Assignment(..),Course(..),canvCourses,canvFiles,canvAssignments,fileStructure,addFiles,sortFolders,foldersToTrees,folderToTree,fileToTree) where
 import Data.Data
 
 import Data.Maybe
@@ -395,7 +395,7 @@ addFiles folders files = foldl searchFolder folders files
                 == Node "root" [Node "root child" []]
   -}
 folderToTree :: Folder -> Tree String
-folderToTree (Folder _ name _ folders files) = Node name ( filesToTree files ++ foldersToTrees folders )
+folderToTree (Folder _ name _ folders files) = Node name ( filesToTrees files ++ foldersToTrees folders )
 
 
 {- foldersToTree files
