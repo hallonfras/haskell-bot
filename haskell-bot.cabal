@@ -31,7 +31,6 @@ executable haskell-bot
                      , dotenv
                      , hint
                      , split
-                     , pretty-tree
                      , containers
                      , HUnit
   hs-source-dirs: ./,Modules/, Tests/

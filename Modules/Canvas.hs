@@ -4,7 +4,7 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE DeriveGeneric   #-}
 
-module Canvas (canvCourses,canvAssignments,canvFiles)where
+module Canvas where
 import Data.Data
 
 import Data.Maybe
@@ -39,7 +39,6 @@ START OF TYPES
   parent_id - id of the parent folder
   children - list of child folders
   files - list of child files
-
 -}
 
 data Folder = Folder {
@@ -404,7 +403,7 @@ folderToTree (Folder _ name _ folders files) = Node name ( filesToTree files ++ 
      PRE: --
      RETURNS: a list of tree string nodes containing all folders and files from their corresponding folder
      SIDE EFFECTS: --
-     EXAMPLES: folderToTree [(Folder "1" "root" Nothing [] []),(Folder "2" "root child" (Just "1") [])]
+     EXAMPLES: foldersToTree [(Folder "1" "root" Nothing [] []),(Folder "2" "root child" (Just "1") [])]
                 == Node "root" [Node "root child" []]
   -}
 foldersToTrees :: [Folder] -> [Tree String]
@@ -427,7 +426,7 @@ fileToTree (File _ name url _) = Node (hyperref name url) []
      PRE: --
      RETURNS: a list of tree string nodes
      SIDE EFFECTS: --
-     EXAMPLES: fileToTree [(File "508" "example.png" "www.example.org" "1"),(File "111" "test.png" "www.google.com" "2")] 
+     EXAMPLES: filesToTree [(File "508" "example.png" "www.example.org" "1"),(File "111" "test.png" "www.google.com" "2")] 
                 == [Node "[example.png](www.example.org)" [], Node "[test.png](www.google.com)" []]
   -}
 filesToTree :: [File] -> [Tree String]

@@ -54,7 +54,7 @@ parsePoetry = foldl (\concated' line -> concated' ++ line ++ "\n") ""
 {- getPoetry
      Gets a messagedata containing a poetry
      PRE: --
-     RETURNS: messagedata containing a poetry
+     RETURNS: Nothing || messagedata containing a poetry
      SIDE EFFECTS: performs a http request
      EXAMPELS --
   -}
