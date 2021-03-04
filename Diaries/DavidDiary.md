@@ -34,7 +34,7 @@ I ran into a problem in the conversion from the API data (Maybe Poetry) which ca
 
 27/2
 ---
-Solved the issue (with the help of Alex) which turned out to be me not having poetry implemented as an array in the converter function.
+Solved the issue which turned out to be me not having poetry implemented as an array in the converter function.
 
 The poetry function was now fully working.
 
