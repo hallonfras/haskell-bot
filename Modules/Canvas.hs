@@ -4,7 +4,7 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE DeriveGeneric   #-}
 
-module Canvas (Folder(..),File(..),Assignment(..),Course(..),canvCourses,canvFiles,canvAssignments,filestructure,addFiles,sortFolders,foldersToTree,folderToTree,fileToTree,filesToTree) where
+module Canvas (Folder(..),File(..),Assignment(..),Course(..),canvCourses,canvFiles,canvAssignments,fileStructure,addFiles,sortFolders,foldersToTrees,folderToTree,fileToTree,filesToTrees) where
 import Data.Data
 
 import Data.Maybe
@@ -218,7 +218,7 @@ START OF CANVAS DISCORD MESSAGE FUNCTIONS
 ---------------------------------------------------
 -}
 canvas_token :: String
-canvas_token = "14589~soDe3Fvwq2zzG4ab8zqPOS7CcJIKsPSybnHE0sPjF7vFTEdGn2eoKaHN9VTUrYqy"
+canvas_token = ""
 
 {- canvCourses message
      Sends a discord embed containing the courses for a canvas user
@@ -307,8 +307,8 @@ getFiles token courseid = do
      PRE: --
      RETURNS: root folder containing all child folders and files
      SIDE EFFECTS: 
-     EXAMPLES: addFiles [(Folder "1" "root" Nothing [] []),(Folder "2" "root child" (Just "1") [])] [(File "101" "file1" "www.file.com" "1")]
-                == [(Folder "1" "root" Nothing [(Folder "2" "root child" (Just "1") [])] [(File "101" "file1" "www.file.com" "1")])]
+     EXAMPLES: fileStructure [(Folder "1" "root" Nothing [] []),(Folder "2" "root child" (Just "1") [] [])] [(File "101" "file1" "www.file.com" "1")]
+                == Folder "1" "root" Nothing [Folder "2" "root child" (Just "1") [] []] [File "101" "file1" "www.file.com" "1"]
   -}
 fileStructure :: [Folder] -> [File] -> Folder
 fileStructure folders files = sortFolders updatedfldrs
@@ -322,7 +322,7 @@ fileStructure folders files = sortFolders updatedfldrs
      RETURNS: root folder containing its child folders
      SIDE EFFECTS: --
      EXAMPLES: sortFolders [(Folder "1" "root" Nothing [] []),(Folder "2" "root child" (Just "1") [] [])]
-                == Folder "1" "root" Nothing [Folder "2" "root child" (Just "1") [] []] []
+                == Folder "1" "root" Nothing [Folder "2" "root child" Just "1" [] []] []
   -}
 sortFolders :: [Folder] -> Folder
 sortFolders folderList = findRoot folderList folderList
@@ -358,7 +358,7 @@ sortFolders folderList = findRoot folderList folderList
      RETURNS: updated folders containing their child files
      SIDE EFFECTS: --
      EXAMPLES: addFiles [(Folder "1" "root" Nothing [] []),(Folder "2" "root child" (Just "1") [])] [(File "101" "file1" "www.file.com" "1")]
-                == [(Folder "1" "root" Nothing [] [(File "101" "file1" "www.file.com" "1")]),(Folder "2" "root child" (Just "1") [])]
+                == [(Folder "1" "root" Nothing [] [(File "101" "file1" "www.file.com" "1")]),(Folder "2" "root child" (Just "1") [] [])]
   -}
 addFiles :: [Folder] -> [File] -> [Folder]
 addFiles folders files = foldl searchFolder folders files
@@ -403,8 +403,8 @@ folderToTree (Folder _ name _ folders files) = Node name ( filesToTree files ++ 
      PRE: --
      RETURNS: a list of tree string nodes containing all folders and files from their corresponding folder
      SIDE EFFECTS: --
-     EXAMPLES: foldersToTree [(Folder "1" "root" Nothing [] []),(Folder "2" "root child" (Just "1") [])]
-                == Node "root" [Node "root child" []]
+     EXAMPLES: foldersToTree [(Folder "1" "root" Nothing [] []),(Folder "2" "root child" (Just "1") [] [])]
+                == [Node "root" [],Node "root child" []]
   -}
 foldersToTrees :: [Folder] -> [Tree String]
 foldersToTrees = foldl (\treelst f -> treelst ++ [folderToTree f]) [] 
@@ -429,5 +429,5 @@ fileToTree (File _ name url _) = Node (hyperref name url) []
      EXAMPLES: filesToTree [(File "508" "example.png" "www.example.org" "1"),(File "111" "test.png" "www.google.com" "2")] 
                 == [Node "[example.png](www.example.org)" [], Node "[test.png](www.google.com)" []]
   -}
-filesToTree :: [File] -> [Tree String]
-filesToTree = map fileToTree
+filesToTrees :: [File] -> [Tree String]
+filesToTrees = map fileToTree
