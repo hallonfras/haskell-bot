@@ -338,7 +338,7 @@ sortFolders folderList = findRoot folderList folderList
             if parent_id f == Nothing then buildFolder (delete f folders) f -- when root folder is found, calls aux function and removes root from folders
             else findRoot fs folders
             where
-                {- buildFolder folders root
+            {- buildFolder folders root
                 Builds folder structure from root folder to bottom
                 PRE: folders does not contain root
                 RETURNS: root folder containing its child folders 
@@ -373,7 +373,7 @@ addFiles folders files = foldl searchFolder folders files
         searchFolder :: [Folder] -> File -> [Folder]
         searchFolder fs file = searchFolder' fs [] file
             where
-                {- searchFolder' fs updatedfs file
+               {- searchFolder' fs updatedfs file
                 searchFolder with accumulator as an extra argument because a function in a foldl only can take 2 arguments
                -}
                 --VARIANT: length fs
